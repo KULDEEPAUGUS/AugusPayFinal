@@ -1,4 +1,7 @@
-/* Auguspay PWA install helper.
+/* Auguspay(TM) PWA install helper.
+ *
+ * (c) 2026 Kuldeep Chotiya. All Rights Reserved.
+ * Proprietary software -- see /LICENSE in the project root.
  *
  * Usage in any page:
  *   <button id="installBtn" hidden>Install app</button>
@@ -23,6 +26,38 @@
       .register('/merchant/sw.js', { scope: '/merchant/' })
       .catch((e) => console.warn('SW register failed', e));
   }
+
+  // --- theme toggle: cycles light -> dark -> system
+  (function () {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    const KEY = 'auguspay-theme';
+    const order = ['light', 'dark', 'system'];
+
+    function current() {
+      try { return localStorage.getItem(KEY) || 'system'; } catch (_) { return 'system'; }
+    }
+    function apply(mode) {
+      if (mode === 'system') document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', mode);
+      btn.setAttribute('data-mode', mode);
+      btn.setAttribute('title', mode === 'system'
+        ? 'Theme: System (click for Light)'
+        : 'Theme: ' + mode[0].toUpperCase() + mode.slice(1) +
+          ' (click for ' + order[(order.indexOf(mode) + 1) % order.length] + ')');
+    }
+
+    apply(current());
+
+    btn.addEventListener('click', () => {
+      const next = order[(order.indexOf(current()) + 1) % order.length];
+      try {
+        if (next === 'system') localStorage.removeItem(KEY);
+        else localStorage.setItem(KEY, next);
+      } catch (_) {}
+      apply(next);
+    });
+  })();
 
   const btn = document.getElementById('installBtn');
   const hint = document.getElementById('iosHint');

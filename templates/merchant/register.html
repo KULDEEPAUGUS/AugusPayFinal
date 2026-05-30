@@ -3,28 +3,92 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Auguspay Merchant – Register</title>
+<title>Auguspay™ Merchant — Register</title>
+<meta name="author" content="Kuldeep Chotiya">
+<meta name="copyright" content="© 2026 Kuldeep Chotiya. All Rights Reserved.">
+<meta name="description" content="Auguspay™ — Offline-tolerant UPI POS for Indian merchants. © 2026 Kuldeep Chotiya.">
 <link rel="manifest" href="/merchant/manifest.webmanifest">
 <link rel="icon" href="/static/merchant/icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0b6b3a">
 <link rel="stylesheet" href="/static/merchant/style.css">
+<script>
+  // No-FOUC theme bootstrap. Runs synchronously before paint.
+  (function () {
+    try {
+      var t = localStorage.getItem('auguspay-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      // remember the mode so install.js can pick it up; also drives the
+      // toggle button's icon if the deferred script hasn't loaded yet.
+      document.documentElement.setAttribute('data-auguspay-mode', t || 'system');
+    } catch (e) {}
+  })();
+  // Set the toggle button's data-mode as soon as it exists in the DOM
+  // (defer scripts run after, but inline body scripts can use MutationObserver).
+  document.addEventListener('DOMContentLoaded', function () {
+    var b = document.getElementById('themeToggle');
+    if (b && !b.hasAttribute('data-mode')) {
+      b.setAttribute('data-mode',
+        document.documentElement.getAttribute('data-auguspay-mode') || 'system');
+    }
+  });
+</script>
 </head>
 <body class="auth">
+<button id="themeToggle" type="button" class="theme-toggle floating" aria-label="Toggle theme" title="Toggle theme">
+  <span class="ic ic-light">☀️</span>
+  <span class="ic ic-dark">🌙</span>
+  <span class="ic ic-system">🖥️</span>
+</button>
+<div class="bg-orbs" aria-hidden="true">
+  <span></span><span></span><span></span>
+</div>
+
 <main>
-  <h1>Auguspay <small>Merchant Toolkit</small></h1>
-  <p class="lede">Offline-tolerant UPI QR for kirana stores. Issue, rotate &amp; reconcile — even when the shop's internet is down.</p>
+  <div class="brandmark" aria-hidden="true">
+    <svg viewBox="0 0 64 64" width="40" height="40">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"  stop-color="#ffffff" stop-opacity=".95"/>
+          <stop offset="100%" stop-color="#dff7e8" stop-opacity=".85"/>
+        </linearGradient>
+      </defs>
+      <path d="M14 8 H8 V14"  stroke="url(#g)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M50 8 H56 V14" stroke="url(#g)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M14 56 H8 V50" stroke="url(#g)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M50 56 H56 V50" stroke="url(#g)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <text x="32" y="44" text-anchor="middle"
+            font-family="system-ui,Segoe UI,Roboto,sans-serif"
+            font-size="34" font-weight="800" fill="url(#g)">₹</text>
+    </svg>
+  </div>
+
+  <h1>Sign in to Auguspay<sup>™</sup></h1>
+  <p class="lede">Create your shop in 30 seconds.</p>
+
   <form id="reg">
-    <label>Shop name <input name="name" required></label>
-    <label>UPI VPA <input name="vpa" placeholder="kirana@okicici" required></label>
-    <label>Phone <input name="phone" pattern="[0-9]{10}" required></label>
-    <button type="submit">Create shop &amp; start</button>
+    <label>Shop name <input name="name" placeholder="Sharma Kirana" required></label>
+    <label>UPI VPA  <input name="vpa"  placeholder="kirana@okicici" required></label>
+    <label>Phone    <input name="phone" placeholder="10-digit mobile" pattern="[0-9]{10}" required></label>
+    <button type="submit"><span>Create shop &amp; start</span> <span class="arrow">→</span></button>
   </form>
   <p id="err" class="err"></p>
+
+  <p class="learnmore">
+    New here? <a href="/merchant/about">Learn how Auguspay works →</a>
+  </p>
 
   <div class="installrow">
     <button id="installBtn" type="button" class="ghost" hidden>📲 Install Auguspay on this phone</button>
     <p id="iosHint" class="hint" hidden></p>
   </div>
+
+  <footer class="copyright">
+    <span class="brand"><span class="mark">A</span>Auguspay<sup>™</sup></span>
+    <span class="sep">·</span>
+    <span class="year">© 2026</span>
+    <span class="sep">·</span>
+    <span class="owner">Kuldeep Chotiya</span>
+  </footer>
 </main>
 <script>
 document.getElementById('reg').addEventListener('submit', async (e) => {
@@ -35,7 +99,7 @@ document.getElementById('reg').addEventListener('submit', async (e) => {
   else document.getElementById('err').textContent = 'Could not register. Check inputs.';
 });
 </script>
-<script src="/static/merchant/install.js"></script>
+<script defer src="/static/merchant/install.js"></script>
 </body>
 </html>
 

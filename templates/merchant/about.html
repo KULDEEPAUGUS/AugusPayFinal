@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About — Auguspay™ Merchant Toolkit</title>
+<meta name="author" content="Kuldeep Chotiya">
+<meta name="copyright" content="© 2026 Kuldeep Chotiya. All Rights Reserved.">
+<link rel="icon" href="/static/merchant/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b6b3a">
+<link rel="stylesheet" href="/static/merchant/style.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('auguspay-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-auguspay-mode', t || 'system');
+    } catch (e) {}
+  })();
+  document.addEventListener('DOMContentLoaded', function () {
+    var b = document.getElementById('themeToggle');
+    if (b && !b.hasAttribute('data-mode')) {
+      b.setAttribute('data-mode',
+        document.documentElement.getAttribute('data-auguspay-mode') || 'system');
+    }
+  });
+</script>
+</head>
+<body class="wiki">
+
+<nav class="wikinav">
+  <a href="/merchant/" class="brand">
+    <span class="mark">A</span> Auguspay<sup>™</sup>
+  </a>
+  <div class="navlinks">
+    <a href="#what">What</a>
+    <a href="#how">How</a>
+    <a href="#security">Security</a>
+    <a href="#faq">FAQ</a>
+    <a href="/merchant/" class="cta">Sign in →</a>
+    <button id="themeToggle" type="button" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme" style="margin-left:.35rem;">
+      <span class="ic ic-light">☀️</span>
+      <span class="ic ic-dark">🌙</span>
+      <span class="ic ic-system">🖥️</span>
+    </button>
+  </div>
+</nav>
+
+<header class="wikihero">
+  <p class="eyebrow">Merchant Toolkit · Documentation</p>
+  <h1>Get paid even when your <span class="hl">Wi-Fi drops</span>.</h1>
+  <p class="lede">
+    Auguspay is a Progressive Web App that lets kirana merchants keep issuing
+    dynamic, reconcilable UPI QR codes even when the shop's internet is down.
+  </p>
+  <p>
+    <a href="/merchant/" class="btn">Create your shop →</a>
+  </p>
+</header>
+
+<main class="wikimain">
+
+  <section id="what" class="wikisec">
+    <h2>What it is</h2>
+    <p>
+      A phone-based point-of-sale app. Every time a customer pays, your phone
+      mints a fresh QR with a signed token, the bank confirms the payment,
+      and your dashboard auto-flips to <strong>✅ PAID</strong>.
+    </p>
+    <div class="grid3">
+      <article>
+        <span class="ico">📡</span>
+        <h3>Works offline</h3>
+        <p>Mint QRs locally with cached HMAC secret. Internet drop ≠ lost sale.</p>
+      </article>
+      <article>
+        <span class="ico">⚡</span>
+        <h3>Live confirmation</h3>
+        <p>Bank webhook arrives → screen flips green + beep. No trusting screenshots.</p>
+      </article>
+      <article>
+        <span class="ico">📒</span>
+        <h3>Honest ledger</h3>
+        <p>Every sale labelled paid / pending / disputed / unmatched at day-end.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="how" class="wikisec">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><strong>Sign up once</strong> — shop name, UPI VPA, phone. Server gives your device a secret key. Install to home screen.</li>
+      <li><strong>Customer pays</strong> — type amount → fresh QR appears → customer scans &amp; pays from any UPI app.</li>
+      <li><strong>Bank confirms</strong> — webhook fires → your dashboard flips to ✅ PAID with a beep, in about 2–5 seconds.</li>
+      <li><strong>End of day</strong> — open the ledger, see every sale matched to a bank UTR. Download CSV for accounting.</li>
+    </ol>
+  </section>
+
+  <section id="security" class="wikisec">
+    <h2>Security model</h2>
+    <p>Every QR carries a 22-character signed token:</p>
+    <pre><code>token = base64url( HMAC_SHA256( merchant_secret,
+        "&lt;merchant_id&gt;|&lt;seq&gt;|&lt;amount_paise&gt;|&lt;nonce&gt;" ) )[:22]</code></pre>
+    <ul class="bullets">
+      <li>The token rides along with the payment in the UPI <code>tr</code> field.</li>
+      <li>When the bank webhook arrives, the server verifies the signature with your secret — fake claims are rejected.</li>
+      <li>Webhook calls themselves are HMAC-signed (<code>X-Auguspay-Signature</code>) so a stranger can't forge settlements.</li>
+      <li>The same UTR is idempotent — duplicate webhook fires don't double-count.</li>
+    </ul>
+  </section>
+
+  <section id="status" class="wikisec">
+    <h2>Status meanings on the ledger</h2>
+    <div class="statusgrid">
+      <div><span class="b paid">PAID</span>     <p>Claim + settlement both present, amounts match. Real money in your account.</p></div>
+      <div><span class="b pending">PENDING</span> <p>You recorded the sale, the bank hasn't confirmed yet. Usually resolves in seconds.</p></div>
+      <div><span class="b disputed">DISPUTED</span><p>Both present, amounts disagree. Investigate manually.</p></div>
+      <div><span class="b unmatched">UNMATCHED</span><p>Bank reported money you didn't mint a QR for. Direct transfer or possible fraud.</p></div>
+    </div>
+  </section>
+
+  <section id="faq" class="wikisec">
+    <h2>Honest FAQ</h2>
+
+    <details open>
+      <summary>Is this really offline payments?</summary>
+      <p>
+        No. <strong>Money cannot move without UPI rails being online.</strong> What can be offline
+        is the <em>merchant's</em> device. The customer's phone still needs data to pay.
+        That's the realistic kirana scenario: shop WiFi is down, but the customer
+        walking in has 4G.
+      </p>
+    </details>
+
+    <details>
+      <summary>How is this different from a printed sticker QR?</summary>
+      <p>
+        Static QRs let any customer pay any amount with no link back to which sale
+        it was. Auguspay generates a fresh amount-bound, signed QR for each sale,
+        so you can prove who paid what and detect fraud at end-of-day.
+      </p>
+    </details>
+
+    <details>
+      <summary>How is this different from GPay / PhonePe Business?</summary>
+      <p>
+        Those apps require <strong>merchant-side internet</strong> to generate a
+        dynamic-amount QR. Auguspay generates the QR locally on your phone using
+        a cached secret — so internet drop doesn't downgrade you to static QRs.
+      </p>
+    </details>
+
+    <details>
+      <summary>How does the bank actually confirm a payment?</summary>
+      <p>
+        Through your PSP's webhook (Razorpay / Cashfree / Decentro). They post
+        settlement details to <code>/merchant/api/webhook/upi</code>. The server
+        verifies the signature, stores the UTR, and pushes a live event to your
+        dashboard over Server-Sent Events.
+      </p>
+    </details>
+
+    <details>
+      <summary>What if the device is completely offline when a customer pays?</summary>
+      <p>
+        Mint the QR, tap <em>"Mark paid (offline fallback)"</em> after the customer
+        shows you their UPI app's success screen. The claim queues in IndexedDB.
+        When you next get internet, claims sync and reconcile against bank webhooks
+        automatically.
+      </p>
+    </details>
+
+    <details>
+      <summary>What data is stored where?</summary>
+      <p>
+        On your phone: a HMAC secret (in IndexedDB) and any queued offline claims.
+        On the server: merchant profile, minted tokens, claims, settlements.
+        Nothing is shared with third parties.
+      </p>
+    </details>
+
+    <details>
+      <summary>Can I use this commercially?</summary>
+      <p>
+        Not without a written licence. See the <a href="https://github.com/">LICENSE</a> file
+        — Auguspay is proprietary software. Personal evaluation and portfolio
+        review are permitted; resale, sublicensing, white-labelling and paid
+        deployments require contacting the owner first.
+      </p>
+    </details>
+  </section>
+
+  <section id="api" class="wikisec">
+    <h2>API at a glance</h2>
+    <p>For developers — full OpenAPI spec at <a href="/docs">/docs</a>.</p>
+    <table class="apitable">
+      <thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>POST</td><td>/merchant/register</td><td>create shop, return secret</td></tr>
+        <tr><td>GET</td> <td>/merchant/api/me</td><td>bootstrap PWA</td></tr>
+        <tr><td>POST</td><td>/merchant/api/batch</td><td>pre-issue printable QRs</td></tr>
+        <tr><td>POST</td><td>/merchant/api/reconcile/claim</td><td>flush offline claims</td></tr>
+        <tr><td>GET</td> <td>/merchant/api/ledger</td><td>reconciled rows + totals</td></tr>
+        <tr><td>GET</td> <td>/merchant/api/events</td><td>SSE stream of settlements</td></tr>
+        <tr><td>POST</td><td>/merchant/api/webhook/upi</td><td>bank/PSP settlement callback</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="roadmap" class="wikisec">
+    <h2>Roadmap</h2>
+    <ol class="bullets">
+      <li>Razorpay / Cashfree adapter for the live webhook.</li>
+      <li>Client-side QR rendering (so the image draws even when offline).</li>
+      <li>Redis pub/sub for multi-worker SSE.</li>
+      <li>Pytest + GitHub Actions CI.</li>
+      <li>UPI Lite acceptance for true end-to-end offline.</li>
+    </ol>
+  </section>
+
+</main>
+
+<footer class="copyright sitewide">
+  <span class="brand"><span class="mark">A</span>Auguspay<sup>™</sup></span>
+  <span class="sep">·</span>
+  <span class="year">© 2026</span>
+  <span class="sep">·</span>
+  <span class="owner">Kuldeep Chotiya</span>
+  <div class="badges">
+    <span class="badge">All Rights Reserved</span>
+    <span class="badge warn">No Resale</span>
+    <span class="badge">Proprietary Software</span>
+  </div>
+  <small class="note">
+    Unauthorized resale, sublicensing, white-labelling or commercial deployment is prohibited.
+    Commercial licensing available on request.
+  </small>
+</footer>
+
+<script defer src="/static/merchant/install.js"></script>
+</body>
+</html>
+

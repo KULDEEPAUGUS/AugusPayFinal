@@ -1,11 +1,14 @@
-/* Auguspay POS service worker – caches the app shell so it boots offline.
+/* Auguspay(TM) POS service worker -- caches the app shell so it boots offline.
+ *
+ * (c) 2026 Kuldeep Chotiya. All Rights Reserved.
+ * Proprietary software -- see /LICENSE in the project root.
  *
  * IMPORTANT: we do NOT cache the /merchant/ HTML page itself.  Its content
  * depends on session state (register vs dashboard), so a cached copy would
  * pin a logged-out user on the register page even after they sign in.
  * For navigations we use network-first with a tiny offline fallback.
  */
-const CACHE = 'auguspay-pos-v6';
+const CACHE = 'auguspay-pos-v16';
 const SHELL = [
   '/static/merchant/style.css',
   '/static/merchant/app.js',

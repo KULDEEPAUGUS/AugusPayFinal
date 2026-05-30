@@ -1,4 +1,11 @@
-﻿# Auguspay -- Offline-tolerant Merchant Toolkit (FastAPI)
+﻿# Auguspay™ — Offline-tolerant Merchant Toolkit (FastAPI)
+
+> **© 2026 Kuldeep Chotiya. All Rights Reserved.**
+> Auguspay™ is a registered trade name of Kuldeep Chotiya. The source code,
+> design, brand, and accompanying documentation are proprietary. Resale,
+> sublicensing, or commercial deployment without prior written permission
+> from the owner is **prohibited**. See [LICENSE](./LICENSE) for the full terms.
+
 > A Progressive Web App that lets kirana merchants keep issuing dynamic, reconcilable UPI QR codes even when the shops internet is down -- relying on the customers connectivity for the actual UPI rails.
 Offline-tolerant merchant tool, not "offline payments." Money still moves over UPI (always online) via the customers phone. What goes offline is the merchants device -- so the shop never has to turn a customer away when its WiFi dies.
 ## Problem
@@ -96,3 +103,23 @@ requirements.txt, .env.example
 4. Pytest + GitHub Actions CI.
 5. Dockerfile + Cloud Run deployment.
 6. UPI Lite acceptance via NPCI-certified PSP (true end-to-end offline).
+
+---
+
+## License & Ownership
+
+**Auguspay™ © 2026 Kuldeep Chotiya. All Rights Reserved.**
+
+This is **proprietary software**, not open-source. By cloning, viewing, or
+running this project you accept the terms of [LICENSE](./LICENSE). In summary:
+
+- ✅ Personal evaluation, learning, and portfolio review are allowed.
+- ❌ You may **not** sell, sublicense, rent, white-label, or deploy this
+  software as a paid or free service for third parties.
+- ❌ You may **not** use the brand name "Auguspay" or any confusingly
+  similar mark in your own product.
+- ❌ You may **not** remove or alter the copyright and attribution notices.
+- ✉️ Commercial licensing is available — contact **Kuldeep Chotiya**.
+
+> Author / Owner: **Kuldeep Chotiya**, 2026.
+

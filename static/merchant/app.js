@@ -1,4 +1,7 @@
-/* Auguspay POS — offline-first logic.
+/* Auguspay(TM) POS -- offline-first logic.
+ *
+ * (c) 2026 Kuldeep Chotiya. All Rights Reserved.
+ * Proprietary software -- see /LICENSE in the project root.
  *
  * Flow:
  *  - On first online load, fetch /merchant/api/me and cache {id, vpa, name, secret, nextSeq}

@@ -3,26 +3,92 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{{ merchant.name }} – Auguspay POS</title>
+<title>{{ merchant.name }} – Auguspay™ POS</title>
+<meta name="author" content="Kuldeep Chotiya">
+<meta name="copyright" content="© 2026 Kuldeep Chotiya. All Rights Reserved.">
 <link rel="manifest" href="/merchant/manifest.webmanifest">
 <link rel="icon" href="/static/merchant/icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0b6b3a">
 <link rel="stylesheet" href="/static/merchant/style.css">
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('auguspay-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute('data-auguspay-mode', t || 'system');
+    } catch (e) {}
+  })();
+  document.addEventListener('DOMContentLoaded', function () {
+    var b = document.getElementById('themeToggle');
+    if (b && !b.hasAttribute('data-mode')) {
+      b.setAttribute('data-mode',
+        document.documentElement.getAttribute('data-auguspay-mode') || 'system');
+    }
+  });
+</script>
 </head>
 <body>
 <header>
-  <div>
+  <button id="menuToggle" class="menu-toggle" type="button" aria-label="Open menu" aria-controls="appMenu" aria-expanded="false">
+    <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+  </button>
+  <div class="brand">
+    <img class="brandicon" src="/static/merchant/icon.svg" alt="" aria-hidden="true">
     <strong>{{ merchant.name }}</strong>
     <span class="vpa">{{ merchant.vpa }}</span>
+    <span class="brandtag">Auguspay<sup>™</sup></span>
   </div>
-  <div class="status">
-    <span id="net" class="dot"></span><span id="netLabel">checking…</span>
-    &nbsp;·&nbsp; <span id="queueLabel">0 queued</span>
-    &nbsp;·&nbsp; <button id="syncBtn" class="link">Sync</button>
-    &nbsp;·&nbsp; <button id="installBtn" class="link" type="button" hidden>📲 Install</button>
-    &nbsp;·&nbsp; <button id="logoutBtn" class="link">Logout</button>
+  <div class="headerinfo" aria-label="Connection status">
+    <span id="net" class="dot" title="Connection"></span>
+    <span id="netLabel">checking…</span>
+    <span class="sep" aria-hidden="true">·</span>
+    <span id="queueLabel" class="queue">0 queued</span>
   </div>
+  <div id="appMenu" class="status" role="menu">
+    <div class="menu-head">
+      <span class="menu-title">Menu</span>
+      <button id="menuClose" class="menu-close" type="button" aria-label="Close menu">✕</button>
+    </div>
+    <button id="syncBtn" class="link" type="button"><span class="ic" aria-hidden="true">⟳</span>Sync</button>
+    <a href="/merchant/about" class="link"><span class="ic" aria-hidden="true">ⓘ</span>About</a>
+    <button id="installBtn" class="link" type="button" hidden><span class="ic" aria-hidden="true">📲</span>Install</button>
+    <button id="logoutBtn" class="link"><span class="ic" aria-hidden="true">⎋</span>Logout</button>
+    <button id="themeToggle" type="button" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+      <span class="ic ic-light">☀️</span>
+      <span class="ic ic-dark">🌙</span>
+      <span class="ic ic-system">🖥️</span>
+    </button>
+  </div>
+  <div id="menuBackdrop" class="menu-backdrop" hidden></div>
 </header>
+
+<script>
+  (function () {
+    var body = document.body;
+    var toggle = document.getElementById('menuToggle');
+    var closeBtn = document.getElementById('menuClose');
+    var backdrop = document.getElementById('menuBackdrop');
+    var menu = document.getElementById('appMenu');
+    function open()  { body.classList.add('menu-open');  toggle.setAttribute('aria-expanded', 'true');  backdrop.hidden = false; }
+    function close() { body.classList.remove('menu-open'); toggle.setAttribute('aria-expanded', 'false'); backdrop.hidden = true; }
+    toggle && toggle.addEventListener('click', function () {
+      body.classList.contains('menu-open') ? close() : open();
+    });
+    closeBtn && closeBtn.addEventListener('click', close);
+    backdrop && backdrop.addEventListener('click', close);
+    // auto-close when a menu item is clicked on mobile
+    menu && menu.addEventListener('click', function (e) {
+      var t = e.target.closest('a, button');
+      if (t && t.id !== 'menuClose' && t.id !== 'themeToggle' && window.matchMedia('(max-width: 720px)').matches) close();
+    });
+    // close drawer if viewport grows past breakpoint
+    window.addEventListener('resize', function () {
+      if (!window.matchMedia('(max-width: 720px)').matches) close();
+    });
+    // ESC closes
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+  })();
+</script>
 
 <p id="iosHint" class="hint iosbar" hidden></p>
 
@@ -74,8 +140,25 @@
   </section>
 </main>
 
-<script src="/static/merchant/app.js"></script>
-<script src="/static/merchant/install.js"></script>
+<footer class="copyright sitewide">
+  <span class="brand"><span class="mark">A</span>Auguspay<sup>™</sup></span>
+  <span class="sep">·</span>
+  <span class="year">© 2026</span>
+  <span class="sep">·</span>
+  <span class="owner">Kuldeep Chotiya</span>
+  <div class="badges">
+    <span class="badge">All Rights Reserved</span>
+    <span class="badge warn">No Resale</span>
+    <span class="badge">Proprietary Software</span>
+  </div>
+  <small class="note">
+    Unauthorized resale, sublicensing, white-labelling or commercial deployment is prohibited.
+    Commercial licensing available on request.
+  </small>
+</footer>
+
+<script defer src="/static/merchant/app.js"></script>
+<script defer src="/static/merchant/install.js"></script>
 </body>
 </html>
 

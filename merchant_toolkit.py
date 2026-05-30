@@ -1,11 +1,15 @@
 """
-Auguspay -- Offline-tolerant Merchant Toolkit (FastAPI version)
-===============================================================
+Auguspay(TM) -- Offline-tolerant Merchant Toolkit (FastAPI version)
+===================================================================
 
 Issue, rotate, and reconcile UPI QRs for kirana stores. The merchant's
 device can be offline; QRs are minted in-browser via WebCrypto using a
 cached HMAC secret. Bank/PSP webhooks confirm settlements; the dashboard
 auto-updates over Server-Sent Events.
+
+(c) 2026 Kuldeep Chotiya. All Rights Reserved.
+Proprietary software -- see LICENSE. Unauthorized resale, sublicensing,
+or commercial deployment is prohibited.
 """
 
 from __future__ import annotations
@@ -241,6 +245,11 @@ def home(request: Request, db: Session = Depends(get_db)):
             request, "merchant/dashboard.html", {"merchant": m}
         )
     return templates.TemplateResponse(request, "merchant/register.html")
+
+
+@router.get("/about", response_class=HTMLResponse)
+def about(request: Request):
+    return templates.TemplateResponse(request, "merchant/about.html")
 
 
 @router.post("/register", status_code=status.HTTP_204_NO_CONTENT)

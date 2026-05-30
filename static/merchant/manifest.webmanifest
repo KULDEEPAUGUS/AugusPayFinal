@@ -1,14 +1,14 @@
 {
-  "name": "Auguspay Merchant Toolkit",
-  "short_name": "Auguspay POS",
+  "name": "Auguspay™ Merchant Toolkit",
+  "short_name": "Auguspay™",
   "start_url": "/merchant/",
   "scope": "/merchant/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0b6b3a",
-  "description": "Offline-first UPI QR issuance and reconciliation for kirana stores.",
+  "description": "Offline-tolerant UPI POS for Indian merchants. © 2026 Kuldeep Chotiya. All Rights Reserved.",
+  "categories": ["business", "finance", "productivity"],
   "icons": [
     { "src": "/static/merchant/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
-
