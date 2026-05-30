@@ -3,26 +3,33 @@
 # Steps:
 #  1. Push this repo to GitHub.
 #  2. https://dashboard.render.com -> New -> Blueprint -> connect the repo.
-#  3. Render reads this file, provisions a web service + persistent disk.
+#  3. Render reads this file, provisions a web service.
 #  4. Click "Apply".  Live URL in ~3 minutes.
+#
+# IMPORTANT: this config uses the FREE tier (no persistent disk).
+# SQLite lives only in the container -- it RESETS on every redeploy or
+# auto-sleep wake. Fine for a demo. For real merchants, switch to:
+#   plan: starter             # ~$7/month, no sleep, persistent disk allowed
+#   disk:
+#     name: auguspay-data
+#     mountPath: /data
+#     sizeGB: 1
+# and change DATABASE_URL to sqlite:////data/auguspay.db
 
 services:
   - type: web
     name: auguspay
     runtime: docker
-    region: singapore     # closest free region to India
-    plan: free            # 512 MB RAM, sleeps after 15 min idle
+    region: singapore           # closest free region to India
+    plan: free                  # 512 MB RAM, sleeps after 15 min idle
     dockerfilePath: ./Dockerfile
     healthCheckPath: /health
     envVars:
       - key: SECRET_KEY
         generateValue: true     # Render auto-generates a strong secret
       - key: DATABASE_URL
-        value: sqlite:////data/auguspay.db
+        value: sqlite:////tmp/auguspay.db   # ephemeral on free tier
       - key: PORT
         value: 8080
-    disk:
-      name: auguspay-data
-      mountPath: /data
-      sizeGB: 1
-
+      - key: MERCHANT_WEBHOOK_SECRET
+        generateValue: true     # rejects forged webhook calls in production
