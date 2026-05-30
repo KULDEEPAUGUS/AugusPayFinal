@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auguspay Merchant – Register</title>
+<link rel="manifest" href="/merchant/manifest.webmanifest">
+<link rel="icon" href="/static/merchant/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b6b3a">
+<link rel="stylesheet" href="/static/merchant/style.css">
+</head>
+<body class="auth">
+<main>
+  <h1>Auguspay <small>Merchant Toolkit</small></h1>
+  <p class="lede">Offline-tolerant UPI QR for kirana stores. Issue, rotate &amp; reconcile — even when the shop's internet is down.</p>
+  <form id="reg">
+    <label>Shop name <input name="name" required></label>
+    <label>UPI VPA <input name="vpa" placeholder="kirana@okicici" required></label>
+    <label>Phone <input name="phone" pattern="[0-9]{10}" required></label>
+    <button type="submit">Create shop &amp; start</button>
+  </form>
+  <p id="err" class="err"></p>
+</main>
+<script>
+document.getElementById('reg').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const r = await fetch('/merchant/register', { method: 'POST', body: fd });
+  if (r.ok) location.href = '/merchant/';
+  else document.getElementById('err').textContent = 'Could not register. Check inputs.';
+});
+</script>
+</body>
+</html>
+
