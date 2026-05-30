@@ -1,0 +1,38 @@
+# Fly.io config -- the easiest free-tier home for this app.
+# Persistent SQLite via volume; single VM; SSE works out of the box.
+#
+# Deploy:  fly launch --copy-config --no-deploy   # first time, accept defaults
+#          fly volumes create auguspay_data --size 1 --region bom
+#          fly secrets set SECRET_KEY=$(openssl rand -hex 32)
+#          fly deploy
+
+app = "auguspay"        # change to a globally-unique name on `fly launch`
+primary_region = "bom"  # Mumbai; pick the region closest to your users
+
+[build]
+
+[env]
+  PORT = "8080"
+  DATABASE_URL = "sqlite:////data/auguspay.db"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0   # set to 1 if you want zero cold-starts
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 80
+    hard_limit = 100
+
+[[mounts]]
+  source = "auguspay_data"
+  destination = "/data"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256          # plenty for this app
+

@@ -1,0 +1,40 @@
+# Docker build context exclusions -- keep images small and fast.
+.git
+.github
+.idea
+.vscode
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+*.egg-info
+build
+dist
+
+# local-only data / config
+.env
+.env.local
+auguspay.db
+auguspay.db-journal
+*.sqlite
+*.sqlite3
+
+# docs / repo-only
+README.md
+.gitignore
+.dockerignore
+.env.example
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# tests aren't needed at runtime
+test_*.py
+tests/
+
