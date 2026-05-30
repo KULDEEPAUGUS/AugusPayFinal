@@ -316,9 +316,6 @@ $('logoutBtn').addEventListener('click', async () => {
   setNet();
   await refreshQueueLabel();
   await refreshLedger();
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/merchant/sw.js', { scope: '/merchant/' })
-      .catch((e) => console.warn('SW register failed', e));
-  }
+  // service worker is registered by install.js (loaded on every page)
 })();
 

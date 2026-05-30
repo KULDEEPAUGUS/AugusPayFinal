@@ -5,10 +5,11 @@
  * pin a logged-out user on the register page even after they sign in.
  * For navigations we use network-first with a tiny offline fallback.
  */
-const CACHE = 'auguspay-pos-v5';
+const CACHE = 'auguspay-pos-v6';
 const SHELL = [
   '/static/merchant/style.css',
   '/static/merchant/app.js',
+  '/static/merchant/install.js',
   '/static/merchant/manifest.webmanifest',
   '/static/merchant/icon.svg',
 ];

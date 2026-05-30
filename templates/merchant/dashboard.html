@@ -19,9 +19,12 @@
     <span id="net" class="dot"></span><span id="netLabel">checking…</span>
     &nbsp;·&nbsp; <span id="queueLabel">0 queued</span>
     &nbsp;·&nbsp; <button id="syncBtn" class="link">Sync</button>
+    &nbsp;·&nbsp; <button id="installBtn" class="link" type="button" hidden>📲 Install</button>
     &nbsp;·&nbsp; <button id="logoutBtn" class="link">Logout</button>
   </div>
 </header>
+
+<p id="iosHint" class="hint iosbar" hidden></p>
 
 <main>
   <section class="card pay">
@@ -72,6 +75,7 @@
 </main>
 
 <script src="/static/merchant/app.js"></script>
+<script src="/static/merchant/install.js"></script>
 </body>
 </html>
 

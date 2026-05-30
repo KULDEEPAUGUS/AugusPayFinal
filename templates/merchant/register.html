@@ -20,6 +20,11 @@
     <button type="submit">Create shop &amp; start</button>
   </form>
   <p id="err" class="err"></p>
+
+  <div class="installrow">
+    <button id="installBtn" type="button" class="ghost" hidden>📲 Install Auguspay on this phone</button>
+    <p id="iosHint" class="hint" hidden></p>
+  </div>
 </main>
 <script>
 document.getElementById('reg').addEventListener('submit', async (e) => {
@@ -30,6 +35,7 @@ document.getElementById('reg').addEventListener('submit', async (e) => {
   else document.getElementById('err').textContent = 'Could not register. Check inputs.';
 });
 </script>
+<script src="/static/merchant/install.js"></script>
 </body>
 </html>
 
